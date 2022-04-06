@@ -1,5 +1,7 @@
 <?php
 
+
+
 function generartercero($datos,$file){     
           
      $jump = "\r\n";
@@ -156,6 +158,134 @@ function generartercero($datos,$file){
 
      
    
+
+   fclose($fp);
+
+   return $fp;
+  
+}
+
+
+function generar_rc($datos1,$file1){     
+          
+     $jump = "\r\n";
+     $fp = fopen($file1, 'w+');
+
+     $FIBATCH_K1_CONSECUTIVO = str_repeat( " ", 9); //*Consecutivo de Grabacion
+
+     $FIBATCH_EMP = str_repeat( " ", 2); //*Empresa del documento
+     $FIBATCH_CO = str_repeat( " ", 3); //*Centro de Operacion del documento
+     $FIBATCH_TIPO = str_repeat( " ", 2); //*Tipo de Documento
+     $FIBATCH_NRO = str_repeat( " ", 6); //*Numero de Documento
+     $FIBATCH_FECHA = str_repeat( " ", 8); //*Fecha del Documento(AAAAMMDD)
+     $FIBATCH_TERC_DOC = str_repeat( " ", 13); //*Tercero del Documento
+     $FIBATCH_SUC_DOC = str_repeat( " ", 2); // Sucursal del tercero Documento
+     $FIBATCH_IND_ANULADO = str_repeat( " ", 1); //*Indicador de Anulado
+     $FIBATCH_VALOR_DOC = str_repeat( " ", 18); //*Valor del Documento 9999999999+ (+ o -)
+
+     $FIBATCH_CUENTA = str_repeat( " ", 8); //*Cuenta Contable
+     $FIBATCH_CO_MOV = str_repeat( " ", 3); //*Centro de Operacion
+     $FIBATCH_TERC = str_repeat( " ", 13); //*Tercero del Movimiento
+     $FIBATCH_SUC = str_repeat( " ", 2); //Sucursal del movimiento
+     $FIBATCH_DETALLE1 = str_repeat( " ", 40); //Observacion de la transaccion
+     $FIBATCH_DETALLE2 = str_repeat( " ", 40); //Observacion de la transaccion
+     $FIBATCH_DC = str_repeat( " ", 1); //*Naturaleza de la transaccion D=Debito C=Credito
+     $FIBATCH_VALOR = str_repeat( " ", 18); //*Valor de la Transaccion (15 Enteros, 2 Decimales, mas el signo (+ o -))
+     $FIBATCH_TASA_IMPRET = str_repeat( " ", 6); //Tasa de Impuestos debe tener la tasa asociada sino se llena con cero (3 Enteros, 3 Decimales)
+     $FIBATCH_TASA_BSEIMP = str_repeat( " ", 6); //Tasa  Base de Impuestos (Debe contener la tasa base del IVA)
+     $FIBATCH_BASE_IVARET = str_repeat( " ", 18); //Valor de la base de Impuesto (+ o -)
+     $FIBATCH_VALOR_ME = str_repeat( " ", 18); //Valor Moneda Extranjera (+ o -) 15 Enteros 2 Decimales
+     $FIBATCH_TASA_CAMBIO = str_repeat( " ", 12); //Tasa de Cambio
+     $FIBATCH_TASA_CONVER = str_repeat( " ", 12); //Tasa de Conversion
+     $FIBATCH_CCOSTO = str_repeat( " ", 8); //Centro de Costos de la Transaccion si la cuenta maneja Centro de costos es obligatorio
+     $FIBATCH_PROYECTO = str_repeat( " ", 10); //Si la cuenta maneja proyectos se llena pero no es obligatorio
+     $FIBATCH_CPTOFC = str_repeat( " ", 8); //Concepto de Flujo de Caja
+     $FIBATCH_TIPO_BANCO = str_repeat( " ", 2); //Tipo de documento  de conciliacion CG=consignacion CH=Cheque ND=NotaDebtio NC=NotaCredito
+     $FIBATCH_NRO_BANCO = str_repeat( " ", 6); //Numero de documento de conciliacion
+
+
+     $FIBATCH_TIPO_CRU_CRUCE = str_repeat( " ", 2); //Tipo de Docto Cruce 
+     $FIBATCH_NRO_CRUCE = str_repeat( " ", 6); //Numero de Docto Cruce
+     $FIBATCH_CUOTA_CRUCE = str_repeat( " ", 2); //Numero de Cuota cruce
+     $FIBATCH_FECHA_VCTO_CRUCE = str_repeat( " ", 8); //Fecha de Vencimiento
+     $FIBATCH_PREFIJO_PROV = str_repeat( " ", 4); //Prefijo del documento del proveedor
+     $FIBATCH_NRO_PROV = str_repeat( " ", 12); //Numero de docto del proveedor
+     $FIBATCH_VEND_CRUCE = str_repeat( " ", 13); //Codigo del tercero o vendedor
+     $FIBATCH_FECHA_DES_PP_CRUCE = str_repeat( " ", 8); //Fecha del Descuento Pronto Pago
+     $FIBATCH_VLRDES_PP_CRUCE = str_repeat( " ", 14); //Valor del descuento pronto pago
+     $FIBATCH_CAJA = str_repeat( " ", 3); //Codigo de caja
+     $FIBATCH_IND_MODO = str_repeat( " ", 1); //*Indicador de Modo 1=Efectivo 2=Cheques 3=Otros 5=Consignaciones
+     $FIBATCH_MEDPAG = str_repeat( " ", 3); //Medio de recaudo
+     $FIBATCH_COD_BANCO = str_repeat( " ", 4); //Codigo banco del cheque
+     $FIBATCH_NRO_CHE = str_repeat( " ", 6); //Numero del cheque
+     $FIBATCH_NRO_REFER = str_repeat( " ", 10); //Ref de la consignacion
+     $FIBATCH_NRO_CTACTE = str_repeat( " ", 20); //Numero de cuenta corriente/Ahorros de la consignacion
+     $FIBATCH_FECHA_REC_CONSIG = str_repeat( " ", 8); //Fecha de Recaudo
+     $FIBATCH_CO_CPTOF = str_repeat( " ", 3); //CO del concepto del flujo de caja
+     $FIBATCH_DETALLE1_DOC = str_repeat( " ", 60); //Detalle adicional
+     $FIBATCH_DETALLE2_DOC = str_repeat( " ", 60);//Detalle adicional
+     $FIBATCH_FILLER = str_repeat( " ", 140); //Interno (En espacios)
+
+    
+    foreach ($datos1 as $filaR) {      
+
+     $registro =    substr( "004431".$FIBATCH_K1_CONSECUTIVO, 0, 9).
+
+                    substr( "03".$FIBATCH_EMP, 0, 2).
+                    substr( "001".$FIBATCH_CO, 0, 3).
+                    substr( "RC".$FIBATCH_TIPO, 0, 2).
+                    substr( "123456".$FIBATCH_NRO, 0, 6).
+                    substr( "20220224".$FIBATCH_FECHA, 0, 8).
+                    substr( "1143854440".$FIBATCH_TERC_DOC, 0, 13).
+                    substr( "00".$FIBATCH_SUC_DOC, 0, 2).
+                    substr( "0".$FIBATCH_IND_ANULADO, 0, 1).
+                    substr( "+15000000.00".$FIBATCH_VALOR_DOC, 0, 18).
+
+                    substr( "16010000".$FIBATCH_CUENTA, 0, 8).
+                    substr( "00".$FIBATCH_CO_MOV, 0, 3).
+                    substr( "999999999".$FIBATCH_TERC, 0, 13).
+                    substr( "00".$FIBATCH_SUC, 0, 2).
+                    substr( "Cliente pago bien".$FIBATCH_DETALLE1, 0, 40).
+                    substr( "Cliente pago antes de lo pactado".$FIBATCH_DETALLE2, 0, 40).
+                    substr( "D".$FIBATCH_DC, 0, 1).
+                    substr( "+1500000.00".$FIBATCH_VALOR, 0, 18).
+                    substr( "000.000".$FIBATCH_TASA_IMPRET, 0, 7).
+                    substr( "000.000".$FIBATCH_TASA_BSEIMP, 0, 7).
+                    substr( "+1300000.00".$FIBATCH_BASE_IVARET, 0, 18).
+                    substr( "+1325000.00".$FIBATCH_VALOR_ME, 0, 18). 
+                    substr( "+3240.00".$FIBATCH_TASA_CAMBIO, 0, 12).
+                    substr( "+55555.666666".$FIBATCH_TASA_CONVER, 0, 12).
+                    substr( " ".$FIBATCH_CCOSTO, 0, 8).
+                    substr( " ".$FIBATCH_PROYECTO, 0, 10).
+                    substr( " ".$FIBATCH_CPTOFC, 0, 8).
+                    substr( " ".$FIBATCH_TIPO_BANCO, 0, 2).
+                    substr( "00".$FIBATCH_NRO_BANCO, 0, 6).
+
+                    substr( "00".$FIBATCH_TIPO_CRU_CRUCE, 0, 2).
+                    substr( "123456".$FIBATCH_NRO_CRUCE, 0, 6).
+                    substr( "00".$FIBATCH_CUOTA_CRUCE, 0, 2).
+                    substr( " ".$FIBATCH_FECHA_VCTO_CRUCE, 0, 8).
+                    substr( " ".$FIBATCH_PREFIJO_PROV, 0, 4).
+                    substr( " ".$FIBATCH_NRO_PROV, 0, 12).
+                    substr( " ".$FIBATCH_VEND_CRUCE, 0, 13).
+                    substr( " ".$FIBATCH_FECHA_DES_PP_CRUCE, 0, 8).
+                    substr( " ".$FIBATCH_VLRDES_PP_CRUCE, 0, 14).
+                    substr( "00".$FIBATCH_CAJA, 0, 3).
+                    substr( "1".$FIBATCH_IND_MODO, 0, 1).
+                    substr( " ".$FIBATCH_MEDPAG, 0, 3).
+                    substr( " ".$FIBATCH_COD_BANCO, 0, 4).
+                    substr( " ".$FIBATCH_NRO_CHE, 0, 6).
+                    substr( " ".$FIBATCH_NRO_REFER, 0, 10).
+                    substr( " ".$FIBATCH_NRO_CTACTE, 0, 20).
+                    substr( " ".$FIBATCH_FECHA_REC_CONSIG, 0, 8).
+                    substr( " ".$FIBATCH_CO_CPTOF, 0, 3).
+                    substr( " ".$FIBATCH_DETALLE1_DOC, 0, 60).
+                    substr( " ".$FIBATCH_DETALLE2_DOC, 0, 60).
+                    substr( " ".$FIBATCH_FILLER, 0, 140).$jump;         
+
+     fwrite($fp, $registro); 
+
+     }  
 
    fclose($fp);
 
