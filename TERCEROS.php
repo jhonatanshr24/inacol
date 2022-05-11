@@ -1,7 +1,5 @@
 <?php
 
-
-
 function generartercero($datos,$file){     
           
      $jump = "\r\n";
